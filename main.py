@@ -1,56 +1,30 @@
 import streamlit as st
+import json
+from create_group import render_create_group
+from group_overview import render_group_overview
+from add_choices import render_add_choices
+from optim import optimise_choices
 
-st.title("top 5")
+if "groep_id" in st.query_params:
+    st.session_state.groep_id = st.query_params.groep_id
 
 
-if "groep_id" not in st.session_state:
-    # Render create group page
-
-    # initialise with 5 options
-    if "n_options" not in st.session_state:
-        st.session_state.n_options = 5
-        st.session_state.options = {}
-
-    for i_optie in range(1, st.session_state.n_options + 1):
-        optie_name = "Optie " + str(i_optie)
-        st.session_state.options[optie_name] = st.text_input(optie_name)
-
-    if st.button("Optie toevoegen"):
-        st.session_state.n_options += 1
-        st.rerun()
-
-    if st.button("Begin een groep"):
-        st.session_state.groep_id = "89u489uy"
-        st.rerun()
-elif "current_person_name" not in st.session_state:
-    # Render add person page
-
-    st.text("Vul je naam in")
-    current_person_name = st.text_input("Naam")
-    if st.button("volgende"):
-        st.session_state.current_person_name = current_person_name
-        st.rerun()
-
+# read groep
+if "groep_id" in st.session_state:
+    try:
+        with open(st.session_state.groep_id + ".json", "r") as f:
+            groep_details = json.load(f)
+            if "current_action" in st.session_state:
+                if st.session_state.current_action == "add_choices":
+                    render_add_choices(groep_details)
+                if st.session_state.current_action == "optim":
+                    optimise_choices(groep_details)
+                if st.session_state.current_action == "overview":
+                    render_group_overview(groep_details)
+            else:
+                render_group_overview(groep_details)
+    except FileNotFoundError:
+        st.error("Groep niet gevonden!")
+        render_create_group()
 else:
-    # Render fill in choices page
-
-    st.title(st.session_state.current_person_name + ", vul je voorkeur in")
-
-    # filter out empty opties
-    all_opties = sorted(
-        [optie for optie in st.session_state.options.values() if len(optie) > 0]
-    )
-
-    # at most 5 voorkeuren can be set
-    n_voorkeuren = min(len(all_opties), 5)
-
-    already_selected_voorkeuren = []
-
-    for i_voorkeur in range(n_voorkeuren):
-
-        opties_for_this_box = all_opties.copy()
-        # for already_selected_voorkeur in already_selected_voorkeuren:
-        #     opties_for_this_box.remove(already_selected_voorkeur)
-
-        st.selectbox(str(i_voorkeur + 1) + "e keus", opties_for_this_box)
-        st.button("Versturen")
+    render_create_group()
