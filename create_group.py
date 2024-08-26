@@ -2,6 +2,8 @@ import streamlit as st
 import json
 from uuid import uuid4
 
+st.title("Selecto")
+
 
 def render_create_group():
     # Render create group page
@@ -10,10 +12,10 @@ def render_create_group():
     groep_name = st.text_input("Groepsnaam")
 
     # initialise with 5 options
-    st.header("Welke opties zijn er?")
+    st.header("Welke opties moeten er verdeeld worden?")
 
     if "n_opties" not in st.session_state:
-        st.session_state.n_opties = 5
+        st.session_state.n_opties = 4
         st.session_state.opties = {}
 
     for i_optie in range(1, st.session_state.n_opties + 1):
@@ -24,7 +26,7 @@ def render_create_group():
         st.session_state.n_opties += 1
         st.rerun()
 
-    if st.button("Maak groep", type="primary"):
+    if st.button("Maak groep", type="primary", use_container_width=True):
         # filter out empty opties
         opties = sorted(
             [optie for optie in st.session_state.opties.values() if len(optie) > 0]

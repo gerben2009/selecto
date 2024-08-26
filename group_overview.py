@@ -21,9 +21,12 @@ def render_group_overview(groep_details):
         )
     with col2:
         if st.button("Voeg persoon toe"):
-            st.session_state.current_person_name = current_person_name
-            st.session_state.current_action = "add_choices"
-            st.rerun()
+            if current_person_name in groep_details["persoonsvoorkeuren"]:
+                st.error("Persoon bestaat al")
+            else:
+                st.session_state.current_person_name = current_person_name
+                st.session_state.current_action = "add_choices"
+                st.rerun()
 
     st.markdown(f"[Link naar deze groep](/?groep_id={st.session_state.groep_id})")
 

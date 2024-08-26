@@ -6,6 +6,9 @@ from time import sleep
 
 
 def optimise_choices(groep_details):
+
+    st.title("Selecto")
+
     table = pd.DataFrame.from_dict(groep_details["persoonsvoorkeuren"], orient="index")
 
     st.header("Scorematrix")
