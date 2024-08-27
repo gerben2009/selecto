@@ -3,7 +3,23 @@ import json
 from time import sleep
 
 
-def render_add_choices(groep_details):
+def errorBack(msg):
+    st.error(msg)
+    sleep(1)
+    st.switch_page("main.py")
+
+
+def render_add_choices():
+    if not (
+        "current_person_name" in st.session_state and "groep_id" in st.session_state
+    ):
+        errorBack("Informatie niet gevonden!")
+
+    try:
+        with open(st.session_state.groep_id + ".json", "r") as f:
+            groep_details = json.load(f)
+    except FileNotFoundError:
+        errorBack("Groep niet gevonden!")
 
     st.title(st.session_state.current_person_name + ", vul je voorkeur in")
 
@@ -24,6 +40,7 @@ def render_add_choices(groep_details):
 
     if st.button("Versturen", type="primary"):
         # check duplicates
+        print(voorkeuren)
         if len(set(voorkeuren.values())) < len(voorkeuren):
             st.error("Elke optie mag slechts 1x voorkomen!")
         else:
@@ -35,7 +52,9 @@ def render_add_choices(groep_details):
                 json.dump(groep_details, f)
 
             st.success("Opgeslagen!")
-
-            st.session_state.current_action = "overview"
             sleep(1)
-            st.rerun()
+
+            st.switch_page("pages/group_overview.py")
+
+
+render_add_choices()

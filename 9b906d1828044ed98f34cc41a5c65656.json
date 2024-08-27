@@ -1,0 +1,1 @@
+{"groep_name": "amice", "persoonsvoorkeuren": {"ik": {"0": "a", "1": "b", "2": "c"}, "jij": {"0": "b", "1": "a", "2": "c"}}, "opties": ["a", "b", "c"], "optimised": true, "opt_row_ind": [0, 1], "opt_col_ind": [0, 1]}
