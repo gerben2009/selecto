@@ -2,6 +2,9 @@ import streamlit as st
 import json
 from uuid import uuid4
 
+
+st.set_page_config(initial_sidebar_state="collapsed")
+
 st.title("Selecto")
 
 
